@@ -63,7 +63,7 @@ require 'rearmed_rails/apply_patches'
 Post.where(name: 'foo').or.where(content: 'bar')
 Post.where(name: 'foo').or.my_custom_scope
 Post.where(name: 'foo').or(Post.where(content: 'bar'))
-Post.where(name: 'foo).or(content: 'bar')
+Post.where(name: 'foo').or(content: 'bar')
 
 Post.pluck_to_hash(:name, :category, :id)
 Post.pluck_to_struct(:name, :category, :id)
