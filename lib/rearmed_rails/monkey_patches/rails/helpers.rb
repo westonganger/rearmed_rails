@@ -55,7 +55,13 @@ if defined?(ActionView::Helpers)
 
         options = []
 
-        options.push([nil,nil]) if include_blank
+        if include_blank
+          if include_blank == true
+            options.push([nil,nil]) 
+          else
+            options.push([include_blank,include_blank])
+          end
+        end
 
         container.each do |element|
           html_attributes = option_html_attributes(element)
