@@ -74,7 +74,8 @@ if defined?(ActiveRecord)
             end
           end
 
-          # Returns an Arel AST containing only where_values
+          private # Returns an Arel AST containing only where_values
+
           def where_ast
             arel_wheres = []
 

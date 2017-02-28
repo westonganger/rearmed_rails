@@ -2,6 +2,29 @@ enabled = RearmedRails.enabled_patches[:rails] == true
 enabled ||= RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers) == true
 
 if defined?(ActionView::Helpers)
+
+  if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :link_to_confirm)
+    ActionView::Helpers::UrlHelper.module_eval do
+      def convert_options_to_data_attributes(options, html_options)
+        if html_options
+          html_options = html_options.stringify_keys
+          html_options['data-remote'] = 'true' if link_to_remote_options?(options) || link_to_remote_options?(html_options)
+
+          method  = html_options.delete('method')
+          add_method_to_attributes!(html_options, method) if method
+          
+          ### CUSTOM - behave like Rails 3.2
+          confirm  = html_options.delete('confirm')
+          html_options['data-confirm'] = confirm if confirm
+
+          html_options
+        else
+          link_to_remote_options?(options) ? {'data-remote' => 'true'} : {}
+        end
+      end
+    end 
+  end
+
   ActionView::Helpers.module_eval do
 
     if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :helpers, :other, :field_is_array)
@@ -12,28 +35,6 @@ if defined?(ActionView::Helpers)
         end
         original_method.bind(self).(options)
       end
-    end
-
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :link_to_confirm)
-      UrlHelper.module_eval do
-        def convert_options_to_data_attributes(options, html_options)
-          if html_options
-            html_options = html_options.stringify_keys
-            html_options['data-remote'] = 'true' if link_to_remote_options?(options) || link_to_remote_options?(html_options)
-
-            method  = html_options.delete('method')
-            add_method_to_attributes!(html_options, method) if method
-            
-            ### CUSTOM - behave like Rails 3.2
-            confirm  = html_options.delete('confirm')
-            html_options['data-confirm'] = confirm if confirm
-
-            html_options
-          else
-            link_to_remote_options?(options) ? {'data-remote' => 'true'} : {}
-          end
-        end
-      end 
     end
 
     if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :options_for_select_include_blank)
