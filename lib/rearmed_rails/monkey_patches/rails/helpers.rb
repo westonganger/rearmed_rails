@@ -25,21 +25,33 @@ if defined?(ActionView::Helpers)
     end 
   end
 
+  if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :field_is_array)
+    module ActionView 
+      module Helpers
+        module Tags
+          class Base
+            private
+
+            original_method = instance_method(:add_default_name_and_id)
+            define_method :add_default_name_and_id  do |options|
+              original_method.bind(self).(options)
+
+              if options['is_array'] && options['name']
+                options['name'] = "#{options['name']}[]"
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
   module RearmedRails
     module RailsHelpers
     end
   end
 
   RearmedRails::RailsHelpers.module_eval do
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :helpers, :helpers, :field_is_array)
-      original_method = instance_method(:add_default_name_and_id)
-      define_method :add_default_name_and_id do |options|
-        if options['is_array'] && options['name']
-          options['name'] = "#{options['name']}[]"
-        end
-        original_method.bind(self).(options)
-      end
-    end
 
     if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :options_for_select_include_blank)
       def options_for_select(container, selected = nil)
@@ -56,11 +68,8 @@ if defined?(ActionView::Helpers)
         options = []
 
         if include_blank
-          if include_blank == true
-            options.push([nil,nil]) 
-          else
-            options.push([include_blank,include_blank])
-          end
+          include_blank = '' if include_blank == true
+          options.push(content_tag_string(:option, include_blank, {value: ''}))
         end
 
         container.each do |element|
