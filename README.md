@@ -11,7 +11,7 @@ The difference between this library and others is that all monkey patching is pe
 gem 'rearmed_rails'
 ```
 
-Run `rails g rearmed_rails:setup` to create a settings files in `config/initializers/rearmed.rb` where you can opt-in to the monkey patches available in the library. Set these values to true if you want to enable the applicable monkey patch.
+Run `rails g rearmed_rails:setup` to create a settings files in `config/initializers/rearmed_rails.rb` where you can opt-in to the monkey patches available in the library. Set these values to true if you want to enable the applicable monkey patch.
 
 ```ruby
 # config/initializers/rearmed.rb
