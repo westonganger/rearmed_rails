@@ -1,6 +1,6 @@
 if defined?(Minitest::Assertions)
 
-  enabled = Rearmed.enabled_patches[:minitest] == true
+  enabled = RearmedRails.enabled_patches[:minitest] == true
 
   Minitest::Assertions.module_eval do
 

@@ -6,11 +6,11 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'yaml'
 require 'minitest'
 
-require 'rearmed'
+require 'rearmed_rails'
 
 require 'minitest/autorun'
 
-class TestRearmed < MiniTest::Test
+class TestRearmedRails < MiniTest::Test
   def setup
     Minitest::Assertions.module_eval do
       alias_method :eql, :assert_equal
@@ -20,7 +20,7 @@ class TestRearmed < MiniTest::Test
       rails: true,
       minitest: true
     }
-    require 'rearmed/apply_patches'
+    require 'rearmed_rails/apply_patches'
   end
 
   def test_minitest
