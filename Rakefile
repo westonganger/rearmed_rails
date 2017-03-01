@@ -11,20 +11,14 @@ task :test do
 end
 
 task :console do
-  require 'rearmed'
-  Rearmed.enabled_patches = {
-    array: true,
-    hash: true,
-    object: true,
-    string: true,
-    date: true,
-    enumerable: true,
-    rails_3: true,
-    rails_4: true,
+  require 'rearmed_rails'
+
+  RearmedRails.enabled_patches = {
     rails: true,
     minitest: true
   }
-  require 'rearmed/apply_patches'
+
+  require 'rearmed_rails/apply_patches'
 
   require 'irb'
   binding.irb
