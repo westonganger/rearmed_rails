@@ -4,7 +4,7 @@ if defined?(Minitest::Assertions)
 
   Minitest::Assertions.module_eval do
 
-    if enabled || Rearmed.dig(Rearmed.enabled_patches, :minitest, :assert_changed)
+    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :minitest, :assert_changed)
       def assert_changed(expression, &block)
         if expression.respond_to?(:call)
           e = expression
@@ -17,7 +17,7 @@ if defined?(Minitest::Assertions)
       end
     end
 
-    if enabled || Rearmed.dig(Rearmed.enabled_patches, :minitest, :assert_not_changed)
+    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :minitest, :assert_not_changed)
       def assert_not_changed(expression, &block)
         if expression.respond_to?(:call)
           e = expression
