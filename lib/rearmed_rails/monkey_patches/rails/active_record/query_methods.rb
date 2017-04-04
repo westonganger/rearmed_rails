@@ -6,6 +6,14 @@ if defined?(ActiveRecord)
   if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :active_record, :or)
 
     if Rails::VERSION::MAJOR > 4
+      unless defined?(ActiveRecord::Relation::QueryMethods)
+        module ActiveRecord
+          class Relation
+            module QueryMethods
+            end
+          end
+        end
+      end
 
       module RearmedRails
         class OrChain
@@ -22,7 +30,7 @@ if defined?(ActiveRecord)
         end
       end
 
-      ActiveRecord::QueryMethods.class_eval do
+      ActiveRecord::QueryMethods.module_eval do
         def or(opts=nil, *rest)
           if opts.nil?
             return RearmedRails::OrChain.new(self)
