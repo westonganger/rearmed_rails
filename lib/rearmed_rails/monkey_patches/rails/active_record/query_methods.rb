@@ -6,6 +6,7 @@ if defined?(ActiveRecord)
   if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :active_record, :or)
 
     if Rails::VERSION::MAJOR > 4
+
       unless defined?(ActiveRecord::Relation::QueryMethods)
         module ActiveRecord
           class Relation
@@ -25,7 +26,7 @@ if defined?(ActiveRecord)
             other = @scope.klass.unscoped do
               @scope.klass.send(method, *args, &block)
             end
-            return @scope.smart_or(other)
+            return @scope.or(other)
           end
         end
       end
@@ -45,7 +46,7 @@ if defined?(ActiveRecord)
         end
       end
 
-    else # rails 4
+    else # end of Rails 5+ section, Rails 4 below
 
       module ActiveRecord
         module Querying
@@ -102,7 +103,7 @@ if defined?(ActiveRecord)
         end
       end
 
-    end
+    end # end of Rails 4 section
 
   end
 
