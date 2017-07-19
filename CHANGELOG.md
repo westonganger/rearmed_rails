@@ -1,6 +1,8 @@
 CHANGELOG
 ---------
 
+- **1.0.4 - July 19, 2017**
+  - Fix error in `find_duplicates` method
 - **1.0.3 - May 3, 2017**
   - Fix error in `or` method
 - **1.0.2 - April 13, 2017**

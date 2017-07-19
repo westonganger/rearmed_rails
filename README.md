@@ -141,6 +141,11 @@ If you want to request a new method please raise an issue and we will discuss th
 
 
 # Credits
-Created by Weston Ganger - @westonganger
+Created by Weston Ganger - [@westonganger](https://github.com/westonganger)
 
-<a href='https://ko-fi.com/A5071NK' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi1.png?v=a' border='0' alt='Buy Me a Coffee' /></a> 
+For any consulting or contract work please contact me via my company website: [Solid Foundation Web Development](https://solidfoundationwebdev.com)
+
+## Similar Libraries Created By Me
+- [Rearmed Ruby](https://github.com/westonganger/rearmed-rb)
+- [Rearmed JS](https://github.com/westonganger/rearmed_rails)
+- [Rearmed CSS](https://github.com/westonganger/rearmed_css)

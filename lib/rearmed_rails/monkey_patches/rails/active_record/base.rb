@@ -103,11 +103,11 @@ if defined?(ActiveRecord)
           end
 
           if options[:delete][:keep] == :last
-            duplicates.reverse!
+            duplicates = duplicates.reverse
           end
 
           used  = []
-          duplicates.reject! do |x| 
+          duplicates = duplicates.reject do |x| 
             attrs = x.attributes.slice(*options[:columns].collect(&:to_s))
 
             if used.include?(attrs)
@@ -122,7 +122,7 @@ if defined?(ActiveRecord)
           if options[:delete][:delete_method].to_sym == :delete
             duplicates = self.where(id: duplicates.collect(&:id))
 
-            if x.respond_to?(:delete_all!)
+            if duplicates.respond_to?(:delete_all!)
               duplicates.delete_all!
             else
               duplicates.delete_all

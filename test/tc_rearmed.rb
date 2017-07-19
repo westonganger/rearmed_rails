@@ -56,8 +56,6 @@ class TestRearmedRails < MiniTest::Test
   end
 
   def test_general_rails
-    # THE MOST IMPORTANT TESTS HERE WOULD BE dedupe, reset_auto_increment, reset_table
-    
     #Post.pluck_to_hash(:name, :category, :id)
     #Post.pluck_to_struct(:name, :category, :id)
 
