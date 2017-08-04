@@ -55,57 +55,35 @@ if defined?(ActionView::Helpers)
 
     if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :options_for_select_include_blank)
       def options_for_select(container, selected = nil)
-        return container if String === container
-
         if selected.is_a?(Hash)
           include_blank = selected[:include_blank] || selected['include_blank']
         end
 
-        selected, disabled = extract_selected_and_disabled(selected).map do |r|
-          Array(r).map(&:to_s)
-        end
-
-        options = []
+        options = super
 
         if include_blank
           include_blank = '' if include_blank == true
-          options.push(content_tag_string(:option, include_blank, {value: ''}))
+
+          if Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR >= 1
+            str = tag_builder.content_tag_string(:option, include_blank, {value: ''})
+          else
+            str = content_tag_string(:option, include_blank, {value: ''})
+          end
+
+          options.prepend(str)
         end
 
-        container.each do |element|
-          html_attributes = option_html_attributes(element)
-          text, value = option_text_and_value(element).map(&:to_s)
-
-          html_attributes[:selected] ||= option_value_selected?(value, selected)
-          html_attributes[:disabled] ||= disabled && option_value_selected?(value, disabled)
-          html_attributes[:value] = value
-
-          options.push content_tag_string(:option, text, html_attributes)
-        end
-
-        options.join("\n").html_safe
+        options
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :options_from_collection_for_select_include_blank)
+    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :rails, :helpers, :options_for_select_include_blank)
       def options_from_collection_for_select(collection, value_method, text_method, selected = nil)
         options = collection.map do |element|
           [value_for_collection(element, text_method), value_for_collection(element, value_method), option_html_attributes(element)]
         end
 
-        if selected.is_a?(Hash)
-          include_blank = selected[:include_blank] || selected['include_blank']
-        end
-
-        selected, disabled = extract_selected_and_disabled(selected)
-
-        select_deselect = {
-          selected: extract_values_from_collection(collection, value_method, selected),
-          disabled: extract_values_from_collection(collection, value_method, disabled),
-          include_blank: include_blank
-        }
-
-        options_for_select(options, select_deselect)
+        options_for_select(options, selected)
       end
     end
   end
