@@ -1,8 +1,8 @@
-enabled = RearmedRails.enabled_patches == :all || RearmedRails.dig(RearmedRails.enabled_patches, :helpers) == true
+enabled = RearmedRails.enabled_patches == :all || RearmedRails._dig(RearmedRails.enabled_patches, :helpers) == true
 
 if defined?(ActionView::Helpers)
 
-  if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :helpers, :link_to_confirm)
+  if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :helpers, :link_to_confirm)
     ActionView::Helpers::UrlHelper.module_eval do
       def convert_options_to_data_attributes(options, html_options)
         if html_options
@@ -24,7 +24,7 @@ if defined?(ActionView::Helpers)
     end 
   end
 
-  if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :helpers, :field_is_array)
+  if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :helpers, :field_is_array)
     module ActionView 
       module Helpers
         module Tags
@@ -52,7 +52,7 @@ if defined?(ActionView::Helpers)
 
   RearmedRails::RailsHelpers.module_eval do
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :helpers, :options_for_select_include_blank)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :helpers, :options_for_select_include_blank)
       def options_for_select(container, selected = nil)
         if selected.is_a?(Hash)
           include_blank = selected[:include_blank] || selected['include_blank']
@@ -76,7 +76,7 @@ if defined?(ActionView::Helpers)
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :helpers, :options_for_select_include_blank)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :helpers, :options_for_select_include_blank)
       def options_from_collection_for_select(collection, value_method, text_method, selected = nil)
         options = collection.map do |element|
           [value_for_collection(element, text_method), value_for_collection(element, value_method), option_html_attributes(element)]

@@ -5,53 +5,51 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'yaml'
 require 'minitest'
+require 'minitest/autorun'
+
+Minitest::Assertions.module_eval do
+  alias_method :eql, :assert_equal
+end
 
 require 'rearmed_rails'
 
-require 'minitest/autorun'
+RearmedRails.enabled_patches = :all
+RearmedRails.apply_patches!
 
-class TestRearmedRails < MiniTest::Test
+class RearmedRailsTest < MiniTest::Test
   def setup
-    Minitest::Assertions.module_eval do
-      alias_method :eql, :assert_equal
-    end
-
-    RearmedRails.enabled_patches = {
-      rails: true,
-      minitest: true
-    }
-    require 'rearmed_rails/apply_patches'
   end
 
-  def test_minitest
-    str = 'first'
-    assert_changed "str" do
-      str = 'second'
-    end
+  def teardown
+  end
 
-    str = 'first'
-    assert_changed ->{ str } do
-      str = 'second'
-    end
+  def test_enabled_patches
+    RearmedRails.instance_variable_set(:@applied, false)
 
-    name = 'first'
-    assert_changed lambda{ name } do
-      name = 'second'
-    end
+    default = RearmedRails.const_get(:DEFAULT_PATCHES)
 
-    name = 'first'
-    assert_not_changed 'name' do
-      name = 'first'
-    end
+    RearmedRails.enabled_patches = nil
+    assert_equal RearmedRails.enabled_patches, default
 
-    name = 'first'
-    assert_not_changed ->{ name } do
-      name = 'first'
-    end
+    RearmedRails.enabled_patches = {}
+    assert_equal RearmedRails.enabled_patches, default
 
-    name = 'first'
-    assert_not_changed lambda{ name } do
-      name = 'first'
+    RearmedRails.enabled_patches = :all
+    assert_equal RearmedRails.enabled_patches, :all
+
+    RearmedRails.enabled_patches = {active_record: true, helpers: false, foo: :bar}
+    assert_equal RearmedRails.enabled_patches, default.merge({active_record: true})
+
+    [true, false, [], '', 1, :foo, RearmedRails].each do |x|
+      assert_raises TypeError do
+        RearmedRails.enabled_patches = x
+      end
+
+      if x != true && x != false
+        assert_raises TypeError do
+          RearmedRails.enabled_patches = {active_record: x}
+        end
+      end
     end
   end
 
@@ -74,26 +72,11 @@ class TestRearmedRails < MiniTest::Test
     #Post.reset_auto_increment # reset mysql/mariadb/postgresql/sqlite auto-increment column, if contains records then defaults to starting from next available number
     ## or with options
     #Post.reset_auto_increment(value: 1, column: :id) # column option is only relevant for postgresql
-
-    #Post.find_in_relation_batches # this returns a relation instead of an array
-    #Post.find_relation_each # this returns a relation instead of an array
-  end
-
-  def test_rails_3
-    #my_hash.compact
-    #my_hash.compact!
-    #Post.all # Now returns AR relation
-    #Post.first.update_columns(a: 'foo', b: 'bar')
-    #Post.pluck(:name, :id) # adds multi column pluck support ex. => [['first', 1], ['second', 2], ['third', 3]]
   end
 
   def test_rails_4
-    #Post.where(name: 'foo').or.where(content: 'bar')
-    #Post.where(name: 'foo').or.my_custom_scope
-    #Post.where(name: 'foo').or(Post.where(content: 'bar'))
-    #Post.where(name: 'foo).or(content: 'bar')
-
     #= link_to 'Delete', post_path(post), method: :delete, confirm: "Are you sure you want to delete this post?" 
     # returns to rails 3 behaviour of allowing confirm attribute as well as data-confirm
   end
+
 end

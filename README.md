@@ -22,11 +22,9 @@ Run `rails g rearmed_rails:setup` to create a settings files in `config/initiali
 # config/initializers/rearmed.rb
 
 RearmedRails.enabled_patches = {
-  active_record: {
     find_duplicates: false,
     find_or_create: false,
     newest: false,
-    or: false,
     pluck_to_hash: false,
     pluck_to_struct: false,
     reset_auto_increment: false,
@@ -37,7 +35,7 @@ RearmedRails.enabled_patches = {
     link_to_confirm: false,
     options_for_select_include_blank: false,
     options_from_collection_for_select_include_blank: false
-  },
+  }
 }
 
 RearmedRails.apply_patches!
@@ -59,7 +57,7 @@ Rearmed.enabled_patches = {
 }
 ```
 
-By design, once `apply_patches!` is called then `Rearmed.enabled_patches` is no longer editable and `apply_patches!` cannot be called again. If you try to do so, it will raise a `PatchesAlreadyAppliedError`. There is no-built in way of changing the patches, if you need to do so (which you shouldn't) that is up to you to figure out.
+By design, once `apply_patches!` is called then `RearmedRails.enabled_patches` is no longer editable and `apply_patches!` cannot be called again. If you try to do so, it will raise a `PatchesAlreadyAppliedError`. There is no-built in way of changing the patches, if you need to do so (which you shouldn't) that is up to you to figure out.
 
 
 ## Rails
@@ -67,31 +65,15 @@ By design, once `apply_patches!` is called then `Rearmed.enabled_patches` is no 
 ### ActiveRecord
 
 ```ruby
-# This version of `or` behaves way nicer than the stupid one that was implemented in Rails 5
-# it allows you to do what you need when you want to. This patch is for Rails 4, 5+ 
-Post.where(name: 'foo').or.where(content: 'bar')
-Post.where(name: 'foo').or.my_custom_scope
-Post.where(name: 'foo').or(Post.where(content: 'bar'))
-Post.where(name: 'foo').or(content: 'bar')
-
-Post.pluck_to_hash(:name, :category, :id)
-Post.pluck_to_struct(:name, :category, :id)
-
 Post.find_or_create(name: 'foo', content: 'bar') # use this instead of the super confusing first_or_create method
 Post.find_or_create!(name: 'foo', content: 'bar')
-
-Post.find_duplicates # return active record relation of all records that have duplicates. By default it skips the primary_key, created_at, updated_at, & deleted_at columns
-Post.find_duplicates(:name) # find duplicates based on the name attribute
-Post.find_duplicates(:name, :category) # find duplicates based on the name & category attribute
-Post.find_duplicates(self.column_names.reject{|x| ['id','created_at','updated_at','deleted_at'].include?(x)})
-
-# It also can delete duplicates. Valid values for keep are :first & :last. Valid values for delete_method are :destroy & :delete. soft_delete is only used if you are using acts_as_paranoid on your model.
-Post.find_duplicates(:name, :category, delete: true)
-Post.find_duplicates(:name, :category, delete: {keep: :first, delete_method: :destroy, soft_delete: true}) # these are the default settings for delete: true
 
 Post.newest # get the newest post, by default ordered by :created_at
 Post.newest(:updated_at) # different sort order
 Post.newest(:published_at, :created_at) # multiple columns to sort on
+
+Post.pluck_to_hash(:name, :category, :id)
+Post.pluck_to_struct(:name, :category, :id)
 
 Post.reset_table # delete all records from table and reset autoincrement column (id), works with mysql/mariadb/postgresql/sqlite
 # or with options
@@ -101,11 +83,17 @@ Post.reset_auto_increment # reset mysql/mariadb/postgresql/sqlite auto-increment
 # or with options
 Post.reset_auto_increment(value: 1, column: :id) # column option is only relevant for postgresql
 
-Post.find_in_relation_batches # this returns a relation instead of an array
-Post.find_relation_each # this returns a relation instead of an array
-```
+Post.find_duplicates # return active record relation of all records that have duplicates. By default it skips the primary_key, created_at, updated_at, & deleted_at columns
+Post.find_duplicates(:name) # find duplicates based on the name attribute
+Post.find_duplicates(:name, :category) # find duplicates based on the name & category attribute
+Post.find_duplicates(self.column_names.reject{|x| ['id','created_at','updated_at','deleted_at'].include?(x)})
 
-Note: All methods which involve deletion are compatible with Paranoia & ActsAsParanoid
+# It also can delete duplicates. 
+# Valid values for keep are :first & :last.
+# Valid values for delete_method are :destroy & :delete. The soft-delete option is only used if you are using acts_as_paranoid on your model.
+Post.find_duplicates(:name, :category, delete: true)
+Post.find_duplicates(:name, :category, delete: {keep: :first, delete_method: :destroy, soft_delete: true}) # these are the default settings for delete: true
+```
 
 ### Helpers
 
@@ -119,30 +107,8 @@ options_for_select(@users.map{|x| [x.name, x.id]}, include_blank: true, selected
 # options_from_collection_for_select_include_blank
 options_from_collection_for_select(@users, 'id', 'name', include_blank: true, selected: params[:user_id])
 
-# returns to rails 3 behaviour of allowing confirm attribute as well as data-confirm
+# returns Rails v3 behaviour of allowing confirm attribute as well as data-confirm
 = link_to 'Delete', post_path(post), method: :delete, confirm: "Are you sure you want to delete this post?" 
-```
-
-### Rails 3.x Backports
-```ruby
-Post.all # Now returns AR relation
-Post.first.update_columns(a: 'foo', b: 'bar')
-Post.pluck(:name, :id) # adds multi column pluck support ex. => [['first', 1], ['second', 2], ['third', 3]]
-```
-
-### Minitest Methods
-```ruby
-assert_changed 'user.name' do
-  user.name = "Bob"
-end
-
-assert_not_changed -> { user.name } do
-  user.update(user_params)
-end
-
-assert_not_changed lambda{ user.name } do
-  user.update(user_params)
-end
 ```
 
 # Contributing
@@ -150,11 +116,11 @@ If you want to request a new method please raise an issue and we will discuss th
 
 
 # Credits
-Created by Weston Ganger - [@westonganger](https://github.com/westonganger)
+Created by [Weston Ganger](https://westonganger.com) - [@westonganger](https://github.com/westonganger)
 
 For any consulting or contract work please contact me via my company website: [Solid Foundation Web Development](https://solidfoundationwebdev.com)
 
-## Similar Libraries Created By Me
+## Other Libraries in the Rearmed family of Plugins
 - [Rearmed Ruby](https://github.com/westonganger/rearmed-rb)
 - [Rearmed JS](https://github.com/westonganger/rearmed_rails)
 - [Rearmed CSS](https://github.com/westonganger/rearmed_css)

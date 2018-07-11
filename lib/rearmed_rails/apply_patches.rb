@@ -1,6 +1,0 @@
-require 'rearmed_rails/monkey_patches/rails/active_record/base'
-require 'rearmed_rails/monkey_patches/rails/active_record/batches'
-require 'rearmed_rails/monkey_patches/rails/active_record/query_methods'
-require 'rearmed_rails/monkey_patches/rails/helpers'
-require 'rearmed_rails/monkey_patches/rails/v3'
-require 'rearmed_rails/monkey_patches/minitest'

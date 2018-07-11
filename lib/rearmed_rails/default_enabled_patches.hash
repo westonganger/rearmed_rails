@@ -1,31 +1,17 @@
 {
-  rails: {
-    active_record: {
-      find_duplicates: false,
-      find_in_relation_batches: false,
-      find_or_create: false,
-      find_relation_each: false,
-      newest: false,
-      or: false,
-      pluck_to_hash: false,
-      pluck_to_struct: false,
-      reset_auto_increment: false,
-      reset_table: false
-    },
-    helpers: {
-      field_is_array: false,
-      link_to_confirm: false,
-      options_for_select_include_blank: false,
-      options_from_collection_for_select_include_blank: false
-    },
-    v3: {
-      all: false,
-      pluck: false,
-      update_columns: false
-    },
-    minitest: {
-      assert_changed: false,
-      assert_not_changed: false
-    }
+  active_record: {
+    find_duplicates: false,
+    find_or_create: false,
+    newest: false,
+    pluck_to_hash: false,
+    pluck_to_struct: false,
+    reset_auto_increment: false,
+    reset_table: false
+  },
+  helpers: {
+    field_is_array: false,
+    link_to_confirm: false,
+    options_for_select_include_blank: false,
+    options_from_collection_for_select_include_blank: false
   }
 }

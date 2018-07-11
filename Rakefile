@@ -5,7 +5,7 @@ task :test do
   require 'rake/testtask'
   Rake::TestTask.new do |t|
     t.libs << 'test'
-    t.test_files = FileList['test/**/tc_*.rb']
+    t.test_files = FileList['test/**/*_test.rb']
     t.verbose = true
   end
 end
@@ -13,12 +13,8 @@ end
 task :console do
   require 'rearmed_rails'
 
-  RearmedRails.enabled_patches = {
-    rails: true,
-    minitest: true
-  }
-
-  require 'rearmed_rails/apply_patches'
+  RearmedRails.enabled_patches = :all
+  RearmedRails.apply_patches!
 
   require 'irb'
   binding.irb

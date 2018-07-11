@@ -1,9 +1,9 @@
-enabled = RearmedRails.enabled_patches == :all || RearmedRails.dig(RearmedRails.enabled_patches, :active_record) == true
+enabled = RearmedRails.enabled_patches == :all || RearmedRails._dig(RearmedRails.enabled_patches, :active_record) == true
 
 if defined?(ActiveRecord)
 
   ActiveRecord::Base.class_eval do
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :newest)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :newest)
       def self.newest(*columns)
         if columns.empty? || !columns.to_s.include?('created_at')
           columns << 'created_at'
@@ -17,7 +17,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :reset_table)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :reset_table)
       def self.reset_table(opts={})
         if opts[:delete_method] && opts[:delete_method].to_sym == :destroy
           if self.try(:paranoid?)
@@ -52,7 +52,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :reset_auto_increment)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :reset_auto_increment)
       def self.reset_auto_increment(opts={})
         case self.connection.adapter_name.downcase.to_sym
         when :mysql2
@@ -68,7 +68,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :find_duplicates)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :find_duplicates)
       def self.find_duplicates(*args)
         options = {}
 
@@ -142,7 +142,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :find_or_create)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :find_or_create)
       def self.find_or_create(attrs={}, save_opts={})
         unless self.where(attrs).limit(1).first
           x = self.class.new(attrs)
@@ -160,7 +160,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :pluck_to_hash)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :pluck_to_hash)
       def self.pluck_to_hash(*keys)
         hash_type = keys[-1].is_a?(Hash) ? keys.pop.fetch(:hash_type, HashWithIndifferentAccess) : HashWithIndifferentAccess
         block_given = block_given?
@@ -174,7 +174,7 @@ if defined?(ActiveRecord)
       end
     end
 
-    if enabled || enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :pluck_to_struct)
+    if enabled || enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :pluck_to_struct)
       def self.pluck_to_struct(*keys)
         struct_type = keys[-1].is_a?(Hash) ? keys.pop.fetch(:struct_type, Struct) : Struct
         block_given = block_given?
@@ -191,7 +191,7 @@ if defined?(ActiveRecord)
 
     private
 
-    if enabled || RearmedRails.dig(RearmedRails.enabled_patches, :active_record, :pluck_to_hash) || RearmedRails.dig(RearmedRails.enabled_patches, :pluck_to_struct)
+    if enabled || RearmedRails._dig(RearmedRails.enabled_patches, :active_record, :pluck_to_hash) || RearmedRails._dig(RearmedRails.enabled_patches, :pluck_to_struct)
       def self.format_keys(keys)
         if keys.blank?
           [column_names, column_names]
