@@ -1,9 +1,14 @@
 # Rearmed Rails
-<a href='https://ko-fi.com/A5071NK' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi1.png?v=a' border='0' alt='Buy Me a Coffee' /></a> 
+
+<a href="https://badge.fury.io/rb/rearmed_rails" target="_blank"><img height="21" style='border:0px;height:21px;' border='0' src="https://badge.fury.io/rb/rearmed_rails.svg" alt="Gem Version"></a>
+<a href='https://travis-ci.org/westonganger/rearmed_rails' target='_blank'><img height='21' style='border:0px;height:21px;' src='https://api.travis-ci.org/westonganger/rearmed_rails.svg?branch=master' border='0' alt='Build Status' /></a>
+<a href='https://rubygems.org/gems/rearmed_rails' target='_blank'><img height='21' style='border:0px;height:21px;' src='https://ruby-gem-downloads-badge.herokuapp.com/rearmed?label=rubygems&type=total&total_label=downloads&color=brightgreen' border='0' alt='RubyGems Downloads' /></a>
+<a href='https://ko-fi.com/A5071NK' target='_blank'><img height='22' style='border:0px;height:22px;' src='https://az743702.vo.msecnd.net/cdn/kofi1.png?v=a' border='0' alt='Buy Me a Coffee' /></a> 
+
 
 A collection of helpful methods and monkey patches for Rails
 
-The difference between this library and others is that all monkey patching is performed in an opt-in way because you shouldnt be using methods you dont know about anyways. 
+The difference between this library and others is that all monkey patching is performed in an opt-in way because you shouldnt be using methods that you dont know about.
 
 ```ruby
 # Gemfile
@@ -17,40 +22,44 @@ Run `rails g rearmed_rails:setup` to create a settings files in `config/initiali
 # config/initializers/rearmed.rb
 
 RearmedRails.enabled_patches = {
-  rails: {
-    active_record: {
-      find_duplicates: false,
-      find_in_relation_batches: false,
-      find_or_create: false,
-      find_relation_each: false,
-      newest: false,
-      or: false,
-      pluck_to_hash: false,
-      pluck_to_struct: false,
-      reset_auto_increment: false,
-      reset_table: false
-    },
-    helpers: {
-      field_is_array: false,
-      link_to_confirm: false,
-      options_for_select_include_blank: false,
-      options_from_collection_for_select_include_blank: false
-    },
-    v3: {
-      all: false,
-      pluck: false,
-      update_columns: false
-    }
+  active_record: {
+    find_duplicates: false,
+    find_or_create: false,
+    newest: false,
+    or: false,
+    pluck_to_hash: false,
+    pluck_to_struct: false,
+    reset_auto_increment: false,
+    reset_table: false
   },
-  minitest: {
-    assert_changed: false,
-    assert_not_changed: false
-  }
+  helpers: {
+    field_is_array: false,
+    link_to_confirm: false,
+    options_for_select_include_blank: false,
+    options_from_collection_for_select_include_blank: false
+  },
 }
 
-
-require 'rearmed_rails/apply_patches'
+RearmedRails.apply_patches!
 ```
+
+Some other argument formats the `enabled_patches` option accepts are:
+
+```ruby
+### Enable everything
+Rearmed.enabled_patches = :all
+
+### Disable everything
+Rearmed.enabled_patches = nil
+
+### Hash values can be boolean/nil values also
+Rearmed.enabled_patches = {
+  active_record: true,
+  helpers: false,
+}
+```
+
+By design, once `apply_patches!` is called then `Rearmed.enabled_patches` is no longer editable and `apply_patches!` cannot be called again. If you try to do so, it will raise a `PatchesAlreadyAppliedError`. There is no-built in way of changing the patches, if you need to do so (which you shouldn't) that is up to you to figure out.
 
 
 ## Rails

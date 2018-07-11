@@ -1,6 +1,12 @@
 CHANGELOG
 ---------
 
+- **2.0.0 - UNRELEASED**
+  - Remove support for Rails 3
+  - Remove and Extract minitest methods to new gem `minitest-changed-assertions`
+  - Remove `ActiveRecord#or` method as it does not always return correct results. Instead use this gem https://github.com/khiav223577/rails_or
+  - Remove `ActiveRecord#find_in_relation_batches` and `ActiveRecord#find_relation_each` methods. The reason I implemented these methods was to improve some performance issues I was having. After used this and then later trying some other techniques I can confirm this is a poor technique to improve performance. Therefore I am removing these methods.
+
 - **1.0.5 - August 3, 2017**
   - Fix `options_for_select_include_blank` & `options_for_select_include_blank` for Rails 5.1+ and improved them to patch in safer way
 - **1.0.4 - July 19, 2017**
