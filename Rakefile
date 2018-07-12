@@ -11,6 +11,9 @@ task :test do
 end
 
 task :console do
+  require 'active_record'
+  require 'action_view'
+
   require 'rearmed_rails'
 
   RearmedRails.enabled_patches = :all

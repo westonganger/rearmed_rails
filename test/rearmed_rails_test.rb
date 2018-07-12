@@ -7,10 +7,8 @@ require 'yaml'
 require 'minitest'
 require 'minitest/autorun'
 
-Minitest::Assertions.module_eval do
-  alias_method :eql, :assert_equal
-end
-
+require 'active_record'
+require 'action_view'
 require 'rearmed_rails'
 
 RearmedRails.enabled_patches = :all
