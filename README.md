@@ -45,13 +45,13 @@ Some other argument formats the `enabled_patches` option accepts are:
 
 ```ruby
 ### Enable everything
-Rearmed.enabled_patches = :all
+RearmedRails.enabled_patches = :all
 
 ### Disable everything
-Rearmed.enabled_patches = nil
+RearmedRails.enabled_patches = nil
 
 ### Hash values can be boolean/nil values also
-Rearmed.enabled_patches = {
+RearmedRails.enabled_patches = {
   active_record: true,
   helpers: false,
 }
