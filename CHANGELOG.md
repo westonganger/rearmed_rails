@@ -1,6 +1,8 @@
 CHANGELOG
 ---------
 
+- **2.0.1 - UNRELEASED**
+  - Fix Ruby 1.9.3 support. Do not use `__dir__` because Ruby 1.9.3 does not support it.
 - **2.0.0 - July 11, 2018**
   - Change method of applying patches from `require 'rearmed_rails/apply_patches'` to `RearmedRails#apply_patches!`
   - Once `apply_patches!` has been called, then `enabled_patches` cannot be changed. If it is, it will raise a `PatchesAlreadyAppliedError`
