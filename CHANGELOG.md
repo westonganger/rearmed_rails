@@ -1,7 +1,7 @@
 CHANGELOG
 ---------
 
-- **2.0.0 - UNRELEASED**
+- **2.0.0 - July 11, 2018**
   - Change method of applying patches from `require 'rearmed_rails/apply_patches'` to `RearmedRails#apply_patches!`
   - Once `apply_patches!` has been called, then `enabled_patches` cannot be changed. If it is, it will raise a `PatchesAlreadyAppliedError`
   - Allow setting `:all` for `Rearmed#enabled_patches=`
