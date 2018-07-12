@@ -43,7 +43,8 @@ module RearmedRails
     if @applied 
       raise ::RearmedRails::Exceptions::PatchesAlreadyAppliedError.new
     else
-      Dir[File.join(__dir__, 'rearmed_rails/monkey_patches/**/*.rb')].each do |filename| 
+      patches_folder = File.expand_path('../rearmed_rails/monkey_patches', __FILE__)
+      Dir[File.join(patches_folder, '**/*.rb')].each do |filename| 
         require filename
       end
 
