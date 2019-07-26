@@ -22,6 +22,7 @@ Run `rails g rearmed_rails:setup` to create a settings files in `config/initiali
 # config/initializers/rearmed.rb
 
 RearmedRails.enabled_patches = {
+  active_record: {
     find_duplicates: false,
     find_or_create: false,
     newest: false,
