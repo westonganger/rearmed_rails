@@ -1,6 +1,8 @@
 CHANGELOG
 ---------
 
+- **2.0.2 - October 10, 2019**
+  - Fix template for `rails g rearmed_rails:setup`
 - **2.0.1 - July 12, 2018**
   - Fix Ruby 1.9.3 support. Do not use `__dir__` because Ruby 1.9.3 does not support it.
 - **2.0.0 - July 11, 2018**
