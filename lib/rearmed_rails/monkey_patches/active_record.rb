@@ -118,9 +118,20 @@ if defined?(ActiveRecord)
           end
           used = nil
 
-          if options[:delete][:delete_method].to_sym == :delete
-            duplicates = self.where(id: duplicates.collect(&:id))
+          duplicate_ids = duplicates.flat_map do |d|
+            attrs = d.attributes.slice(*options[:columns].collect(&:to_s))
+            current_duplicates = self.where(attrs)
+            
+            if options[:delete][:keep] == :first
+              current_duplicates.offset(1).pluck(:id)
+            else
+              current_duplicates.limit(current_duplicates.size - 1).pluck(:id)
+            end
+          end
 
+          duplicates = self.where(id: duplicate_ids)
+
+          if options[:delete][:delete_method].to_sym == :delete
             if duplicates.respond_to?(:delete_all!)
               duplicates.delete_all!
             else
