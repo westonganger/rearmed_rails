@@ -122,7 +122,11 @@ if defined?(ActiveRecord)
             attrs = d.attributes.slice(*options[:columns].collect(&:to_s))
             current_duplicates = self.where(attrs)
             
-            current_duplicates.offset(options[:delete][:keep] == :first ? 1 : 0).limit(options[:delete][:keep] == :first ? current_duplicates.size : current_duplicates.size - 1).pluck(:id)
+            if options[:delete][:keep] == :first
+              current_duplicates.offset(1).pluck(:id)
+            else
+              current_duplicates.limit(current_duplicates.size - 1).pluck(:id)
+            end
           end
 
           duplicates = self.where(id: duplicate_ids)
